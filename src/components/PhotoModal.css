@@ -1,0 +1,124 @@
+.photo-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.photo-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-modal-close {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  z-index: 10;
+  transition: background-color 0.2s;
+}
+
+.photo-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.photo-modal-close .material-symbols-outlined {
+  font-size: 1.5rem;
+}
+
+.photo-modal-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.photo-modal-nav {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  z-index: 10;
+  transition: background-color 0.2s;
+}
+
+.photo-modal-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.photo-modal-nav .material-symbols-outlined {
+  font-size: 2rem;
+}
+
+.photo-modal-prev {
+  left: 0;
+}
+
+.photo-modal-next {
+  right: 0;
+}
+
+.photo-modal-image-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.photo-modal-image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.photo-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  color: white;
+}
+
+.photo-modal-description {
+  font-size: 0.875rem;
+  text-align: center;
+  flex: 1;
+}
+
+.photo-modal-counter {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 1rem;
+}
