@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import './PhotoModal.css';
 
-import { API_URL, UPLOADS_URL } from '../api';
+import { API_URL } from '../api';
 
 export default function PhotoModal({ photos, currentIndex, onClose, onChangeIndex }) {
   const handleKeyDown = useCallback((e) => {
@@ -41,7 +41,7 @@ export default function PhotoModal({ photos, currentIndex, onClose, onChangeInde
 
             <div className="photo-modal-image-container">
               <img
-                src={`${UPLOADS_URL}/${currentPhoto.path}`}
+                src={currentPhoto.path}
                 alt={`Foto ${currentIndex + 1}`}
                 className="photo-modal-image"
               />

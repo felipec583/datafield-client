@@ -4,7 +4,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import PhotoModal from '../components/PhotoModal';
 import './ReviewDetail.css';
 
-import { API_URL, UPLOADS_URL } from '../api';
+import { API_URL } from '../api';
 
 const statusMap = {
   'open': 'Abierta',
@@ -224,7 +224,7 @@ export default function ReviewDetail() {
                   onClick={() => openPhotoModal(index)}
                 >
                   <img 
-                    src={`${UPLOADS_URL}/${photo.path}`} 
+                    src={photo.path}
                     alt={`Foto ${index + 1}`}
                   />
                   <div className="photo-overlay">

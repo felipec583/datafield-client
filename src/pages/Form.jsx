@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import './Form.css';
 
-import { API_URL, UPLOADS_URL } from '../api';
+import { API_URL } from '../api';
 
 const generateDocCode = () => {
   const year = new Date().getFullYear();
