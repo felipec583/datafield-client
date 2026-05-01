@@ -18,6 +18,11 @@ export default function ReviewDetail() {
   const [review, setReview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [photoModal, setPhotoModal] = useState({ open: false, index: 0 });
+  const [fabOpen, setFabOpen] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailFormat, setEmailFormat] = useState('pdf');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     fetchReview();
@@ -49,6 +54,61 @@ export default function ReviewDetail() {
     if (newIndex >= 0 && newIndex < (review.photos?.length || 0)) {
       setPhotoModal(prev => ({ ...prev, index: newIndex }));
     }
+  };
+
+  const handleDownload = async (format) => {
+    setFabOpen(false);
+    try {
+      const response = await fetch(`${API_URL}/review/${id}/export?format=${format}`);
+      if (!response.ok) throw new Error('Error downloading file');
+
+      const blob = await response.blob();
+      const extension = format === 'excel' ? 'xlsx' : 'pdf';
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `informe-inspeccion-${id}.${extension}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading file:', err);
+      toast.error('Error al descargar el archivo');
+    }
+  };
+
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setSendingEmail(true);
+
+    try {
+      const response = await fetch(`${API_URL}/review/${id}/send-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, format: emailFormat }),
+      });
+
+      if (response.ok) {
+        toast.success('Correo enviado exitosamente');
+        setShowEmailModal(false);
+        setEmail('');
+      } else {
+        toast.error('Error al enviar el correo');
+      }
+    } catch (err) {
+      console.error('Error sending email:', err);
+      toast.error('Error al enviar el correo');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  const openEmailModal = () => {
+    setFabOpen(false);
+    setShowEmailModal(true);
   };
 
   const formatDate = (date) => {
@@ -89,7 +149,6 @@ export default function ReviewDetail() {
       </header>
 
       <main className="review-detail-main">
-        {/* Section 1: Proyecto */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">business</span>
@@ -123,7 +182,6 @@ export default function ReviewDetail() {
           </div>
         </section>
 
-        {/* Section 2: Área */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">location_on</span>
@@ -149,7 +207,6 @@ export default function ReviewDetail() {
           </div>
         </section>
 
-        {/* Section 3: Normativa */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">policy</span>
@@ -166,7 +223,6 @@ export default function ReviewDetail() {
           </div>
         </section>
 
-        {/* Section 4: Documentación */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">description</span>
@@ -188,7 +244,6 @@ export default function ReviewDetail() {
           </div>
         </section>
 
-        {/* Section 5: Acciones */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">build</span>
@@ -197,7 +252,6 @@ export default function ReviewDetail() {
           <p className="text-value">{review.correctiveActions || '-'}</p>
         </section>
 
-        {/* Section 6: Estado */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">fact_check</span>
@@ -208,7 +262,6 @@ export default function ReviewDetail() {
           </span>
         </section>
 
-        {/* Section 7: Fotos */}
         {review.photos && review.photos.length > 0 && (
           <section className="detail-section">
             <h2 className="section-title">
@@ -236,7 +289,6 @@ export default function ReviewDetail() {
           </section>
         )}
 
-        {/* Section 8: Comentarios */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">chat</span>
@@ -245,7 +297,6 @@ export default function ReviewDetail() {
           <p className="text-value">{review.comments || '-'}</p>
         </section>
 
-        {/* Section 9: Conclusión */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">check_circle</span>
@@ -254,7 +305,6 @@ export default function ReviewDetail() {
           <p className="text-value">{review.conclusion || '-'}</p>
         </section>
 
-        {/* Section 10: Firmas */}
         <section className="detail-section">
           <h2 className="section-title">
             <span className="material-symbols-outlined">draw</span>
@@ -280,6 +330,84 @@ export default function ReviewDetail() {
           </div>
         </section>
       </main>
+
+      <div className="fab-container">
+        <div className={`fab-menu ${fabOpen ? 'open' : ''}`}>
+          <button className="fab-option" onClick={() => handleDownload('pdf')}>
+            <span className="material-symbols-outlined">picture_as_pdf</span>
+            <span>Descargar PDF</span>
+          </button>
+          <button className="fab-option" onClick={() => handleDownload('excel')}>
+            <span className="material-symbols-outlined">table_chart</span>
+            <span>Descargar Excel</span>
+          </button>
+          <button className="fab-option" onClick={openEmailModal}>
+            <span className="material-symbols-outlined">email</span>
+            <span>Enviar por Email</span>
+          </button>
+        </div>
+        <button className={`fab-main ${fabOpen ? 'open' : ''}`} onClick={() => setFabOpen(!fabOpen)}>
+          <span className="material-symbols-outlined">{fabOpen ? 'close' : 'more_horiz'}</span>
+        </button>
+      </div>
+
+      {showEmailModal && (
+        <div className="review-email-modal" onClick={() => setShowEmailModal(false)}>
+          <div className="review-email-modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Enviar por Correo</h3>
+            <form className="review-email-form" onSubmit={handleSendEmail}>
+              <div className="form-group">
+                <label htmlFor="email">Correo electrónico</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="correo@ejemplo.com"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Formato</label>
+                <div className="radio-group">
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="pdf"
+                      checked={emailFormat === 'pdf'}
+                      onChange={(e) => setEmailFormat(e.target.value)}
+                    />
+                    <span>PDF</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="excel"
+                      checked={emailFormat === 'excel'}
+                      onChange={(e) => setEmailFormat(e.target.value)}
+                    />
+                    <span>Excel</span>
+                  </label>
+                </div>
+              </div>
+              <div className="review-email-modal-actions">
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() => setShowEmailModal(false)}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-send" disabled={sendingEmail}>
+                  {sendingEmail ? 'Enviando...' : 'Enviar'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {photoModal.open && (
         <PhotoModal 

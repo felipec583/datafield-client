@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+const INSPECTOR_EMAIL = import.meta.env.VITE_INSPECTOR_EMAIL || 'inspector@test.com';
+const INSPECTOR_PASSWORD = import.meta.env.VITE_INSPECTOR_PASSWORD;
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -10,7 +13,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === 'inspector@test.com' && password === 'inspector2024') {
+    if (email === INSPECTOR_EMAIL && password === INSPECTOR_PASSWORD) {
       navigate('/reviews');
     } else {
       setError('Credenciales incorrectas');
@@ -66,7 +69,7 @@ export default function Login() {
           </button>
 
           <p className="demo-hint">
-            Demo: inspector@test.com
+            Demo: {INSPECTOR_EMAIL}
           </p>
         </form>
       </main>
