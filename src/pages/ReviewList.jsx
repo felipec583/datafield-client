@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
+import { useAuth } from '../auth';
 import ConfirmModal from '../components/ConfirmModal';
 import './ReviewList.css';
 
@@ -20,6 +21,7 @@ const statusClass = {
 
 export default function ReviewList() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
@@ -87,6 +89,11 @@ export default function ReviewList() {
     setConfirmDelete(null);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   const formatDate = (date) => {
     if (!date) return '-';
     return new Date(date).toLocaleDateString('es-CL');
@@ -115,6 +122,10 @@ export default function ReviewList() {
           <h1>{isMobile ? 'Inspecciones' : 'Lista de Inspecciones'}</h1>
           <span className="count">({reviews.length})</span>
         </div>
+
+        <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión">
+          <span className="material-symbols-outlined">logout</span>
+        </button>
 
         <button className="btn-new" onClick={handleNewInspection}>
           <span className="material-symbols-outlined">add</span>

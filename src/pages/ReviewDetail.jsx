@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
+import { useAuth } from '../auth';
 import PhotoModal from '../components/PhotoModal';
 import './ReviewDetail.css';
 
@@ -15,6 +16,7 @@ const statusMap = {
 export default function ReviewDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [review, setReview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [photoModal, setPhotoModal] = useState({ open: false, index: 0 });
@@ -111,6 +113,11 @@ export default function ReviewDetail() {
     setShowEmailModal(true);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   const formatDate = (date) => {
     if (!date) return '-';
     return new Date(date).toLocaleDateString('es-CL');
@@ -146,6 +153,9 @@ export default function ReviewDetail() {
           <h1>Detalle de Inspección</h1>
           <span className="doc-code">Código: {review.docCode || '-'}</span>
         </div>
+        <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión">
+          <span className="material-symbols-outlined">logout</span>
+        </button>
       </header>
 
       <main className="review-detail-main">

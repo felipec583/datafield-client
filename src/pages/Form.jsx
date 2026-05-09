@@ -185,7 +185,7 @@ export default function Form() {
   return (
     <div className="form">
       <header className="form-header">
-        <button className="back-btn" onClick={() => navigate('/login')}>
+        <button className="back-btn" onClick={() => navigate('/reviews')}>
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <div className="header-title">
