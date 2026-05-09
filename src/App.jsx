@@ -8,6 +8,7 @@ import Form from './pages/Form';
 import Completion from './pages/Completion';
 import ReviewList from './pages/ReviewList';
 import ReviewDetail from './pages/ReviewDetail';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/reviews/:id" element={<ProtectedRoute><ReviewDetail /></ProtectedRoute>} />
           <Route path="/form" element={<ProtectedRoute><Form /></ProtectedRoute>} />
           <Route path="/completion" element={<ProtectedRoute><Completion /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </Router>
